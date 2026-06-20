@@ -8,25 +8,102 @@ st.set_page_config(
 )
 
 st.title("🌐 GenAI Network Troubleshooting Assistant")
-st.write("Ask Cisco troubleshooting questions using RAG + FAISS + Gemini")
+st.caption("Powered by RAG + FAISS + Gemini")
 
-query = st.text_input(
-    "Ask your question:",
-    placeholder="Why is OSPF not forming adjacency?"
+show_context = st.checkbox(
+    "Show Retrieved Context"
+      )
+
+# Chat History
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Display Previous Messages
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+        if (
+            message["role"] == "assistant"
+            and "sources" in message
+        ):
+            st.markdown("**Sources:**")
+            for source in message["sources"]:
+                st.write(f"• {source}")
+
+# Chat Input
+prompt = st.chat_input(
+    "Ask a networking troubleshooting question..."
 )
 
-if st.button("Ask"):
+if prompt:
 
-    if query:
+    # User Message
+    st.session_state.messages.append(
+        {
+            "role": "user",
+            "content": prompt
+        }
+    )
+
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    # Assistant Response
+    with st.chat_message("assistant"):
 
         with st.spinner("Searching knowledge base..."):
 
-            result = get_answer(query)
+            result = get_answer(prompt)
 
-            st.subheader("Answer")
-            st.write(result["answer"])
+            st.markdown(result["answer"])
+            if show_context:
 
-            st.subheader("Sources")
+                st.markdown("---")
+                st.markdown("### Retrieved Context")
+
+                for i, chunk in enumerate(
+                    result["retrieved_chunks"],
+                    start=1
+                ):
+                    st.markdown(
+                        f"#### Chunk {i}"
+                    )
+
+                    st.code(chunk)
+
+            st.markdown("**Sources:**")
 
             for source in result["sources"]:
                 st.write(f"• {source}")
+
+    st.session_state.messages.append(
+        {
+            "role": "assistant",
+            "content": result["answer"],
+            "sources": result["sources"]
+        }
+    )
+
+# Sidebar
+with st.sidebar:
+
+    st.header("Example Questions")
+
+    examples = [
+        "Why is OSPF not forming adjacency?",
+        "BGP neighbor stuck in ACTIVE state",
+        "EtherChannel not forming",
+        "Hosts in same VLAN cannot communicate",
+        "How to troubleshoot STP issues?"
+    ]
+
+    for q in examples:
+        st.write("•", q)
+
+    st.divider()
+ 
+
+    if st.button("Clear Chat"):
+        st.session_state.messages = []
+        st.rerun()

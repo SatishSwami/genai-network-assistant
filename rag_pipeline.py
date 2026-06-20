@@ -46,7 +46,14 @@ def get_answer(question):
     prompt = f"""
 You are an expert Cisco Network Troubleshooting Assistant.
 
-Answer ONLY using the provided context.
+Rules:
+1. Use only the provided context.
+2. If the answer is not available in the context, say:
+   "The information is not available in the knowledge base."
+3. Give concise troubleshooting steps.
+4. Explain the likely root causes first.
+5. Then provide recommended fixes.
+
 
 Context:
 {context}
@@ -58,11 +65,15 @@ Question:
     response = llm.invoke(prompt)
 
     return {
-        "answer": response.content,
-        "sources": list(
-    set(
-        os.path.basename(doc.metadata["source"])
+    "answer": response.content,
+    "sources": list(
+        set(
+            os.path.basename(doc.metadata["source"])
+            for doc in docs
+        )
+    ),
+    "retrieved_chunks": [
+        doc.page_content
         for doc in docs
-    )
-                       )
+    ]
     }
