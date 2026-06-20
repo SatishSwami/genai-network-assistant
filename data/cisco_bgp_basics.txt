@@ -1,0 +1,18 @@
+BGP Troubleshooting Guide
+Problem: BGP neighbor not establishing
+States: IDLE → CONNECT → ACTIVE → OPENSENT → OPENCONFIRM → ESTABLISHED
+Stuck in IDLE:
+- Check if neighbor IP is reachable: ping <neighbor-ip>
+- Check if BGP process is running: show ip bgp summary
+Stuck in ACTIVE:
+- TCP connection failing - check ACLs blocking port 179
+- Wrong neighbor IP configured
+- Fix: router bgp 65001 / neighbor 10.0.0.2 remote-as 65002
+Verification: show ip bgp neighbors / show ip bgp summary
+Problem: BGP routes not being advertised
+Root Causes:
+1. Network statement missing
+ Fix: router bgp 65001 / network 192.168.1.0 mask 255.255.255.0
+2. Route not in IGP routing table
+3. Route being filtered by route-map or prefix-list
+Debug: show ip bgp / debug ip bgp updates

@@ -1,0 +1,34 @@
+VLAN Troubleshooting Guide
+Problem: Hosts in same VLAN cannot communicate
+Symptoms: Ping fails between hosts on same VLAN
+Root Causes:
+1. Host assigned to wrong VLAN
+ Fix: switchport access vlan 10
+ Verify: show vlan brief
+2. Port not in access mode
+ Fix: switchport mode access
+3. VLAN not created on switch
+ Fix: vlan 10 / name SALES
+ Verify: show vlan brief - VLAN must show as active
+Problem: Inter-VLAN routing not working
+Symptoms: Cannot ping between different VLANs
+Root Causes:
+1. No Layer 3 device configured for routing
+ Fix: Configure Router-on-a-Stick or use Layer 3 switch
+2. Trunk port not configured
+ Fix: switchport mode trunk / switchport trunk allowed vlan all
+ Verify: show interfaces trunk
+3. Sub-interface IP mismatch with host gateway
+ Fix: interface GigabitEthernet0/0.10 / encapsulation dot1Q 10 / ip address 192.168.10.1 255.255.255.0
+Problem: Trunk not forming between switches
+Root Causes:
+1. Native VLAN mismatch
+ Fix: switchport trunk native vlan 1 (must match on both ends)
+2. DTP negotiation issue
+ Fix: switchport nonegotiate / switchport mode trunk
+Verify: show interfaces trunk / show dtp interface
+Common Commands:
+- show vlan brief
+- show interfaces trunk
+- show interfaces switchport
+- show mac address-table

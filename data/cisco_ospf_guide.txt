@@ -1,0 +1,24 @@
+OSPF Troubleshooting Guide
+Problem: OSPF neighbors not forming adjacency
+Symptoms: show ip ospf neighbor shows no output or stuck in INIT state
+Root Causes:
+1. Mismatched Hello/Dead timers - both routers must have same timers
+ Fix: interface config - ip ospf hello-interval 10 / ip ospf dead-interval 40
+2. Mismatched Area IDs - routers must be in same OSPF area
+ Fix: router ospf 1 / network 192.168.1.0 0.0.0.255 area 0
+3. Mismatched subnet masks - both interfaces must be on same subnet
+4. OSPF network type mismatch - check with show ip ospf interface
+5. Authentication mismatch - if one side has auth, both must match
+ Fix: ip ospf authentication message-digest / ip ospf message-digest-key 1 md5 PASSWORD
+Debug commands:
+- show ip ospf neighbor
+- show ip ospf interface brief
+- debug ip ospf adj
+- show ip route ospf
+Problem: OSPF route not appearing in routing table
+Root Causes:
+1. Area not connected properly - check area configuration
+2. Route being filtered by distribute-list
+3. Passive interface configured on wrong interface
+Fix: no passive-interface GigabitEthernet0/0
+Verification: show ip ospf database / show ip route

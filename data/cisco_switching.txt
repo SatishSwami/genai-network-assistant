@@ -1,0 +1,28 @@
+Switching Troubleshooting Guide
+Problem: Spanning Tree causing network loops
+Symptoms: Network broadcast storm, high CPU, MAC flapping
+Root Causes:
+1. STP disabled accidentally
+ Fix: spanning-tree vlan 1 enable
+2. Wrong root bridge elected
+ Fix: spanning-tree vlan 1 root primary
+Verify: show spanning-tree vlan 1
+Problem: Port stuck in Blocking state
+Root Causes:
+1. Port is non-designated port (normal STP behavior)
+2. PortFast not enabled on access port
+ Fix: spanning-tree portfast (on access ports only, NEVER on trunk)
+Verify: show spanning-tree interface GigabitEthernet0/1
+Problem: EtherChannel not forming
+Root Causes:
+1. Mismatched modes (LACP vs PAgP vs Static)
+ Fix both sides: channel-group 1 mode active (LACP)
+2. Mismatched speed/duplex
+3. Different VLANs allowed on each member port
+Verify: show etherchannel summary / show interfaces port-channel 1
+Common Commands:
+- show mac address-table
+- show spanning-tree
+- show etherchannel summary
+- show interfaces status
+- show cdp neighbors
