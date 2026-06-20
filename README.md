@@ -14,7 +14,7 @@ A Retrieval-Augmented Generation (RAG) chatbot designed to assist network engine
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Workflow Overview
 
 ```text
 User Query
@@ -34,6 +34,23 @@ Gemini LLM
      ▼
 Grounded Response + Sources
 ```
+
+---
+
+## 🏗️ System Architecture
+
+![System Architecture](assets/architecture.png)
+
+### Workflow
+
+1. Networking documents are loaded and split into chunks.
+2. Sentence Transformer embeddings are generated for each chunk.
+3. Embeddings are stored in a FAISS vector database.
+4. User submits a networking query through Streamlit.
+5. Query is converted into an embedding and searched against FAISS.
+6. Top relevant chunks are retrieved.
+7. Retrieved context is sent to Gemini 2.5 Flash.
+8. Gemini generates a grounded response with source attribution.
 
 ---
 
