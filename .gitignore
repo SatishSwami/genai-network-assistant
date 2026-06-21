@@ -2,4 +2,5 @@ venv/
 .env
 __pycache__/
 faiss_index/
-*.pyc
+*.pyc   
+temp_uploaded.pdf
