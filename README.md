@@ -1,39 +1,34 @@
 # 🌐 GenAI Network Troubleshooting Assistant
 
-A Retrieval-Augmented Generation (RAG) chatbot designed to assist network engineers, students, and IT professionals in troubleshooting Cisco networking issues. The application combines semantic search using FAISS and Sentence Transformers with Google's Gemini LLM to generate accurate, context-aware answers grounded in a networking knowledge base.
+A Retrieval-Augmented Generation (RAG) application that helps network engineers, students, and IT professionals troubleshoot Cisco networking issues using AI-powered semantic search. The application combines FAISS vector search, Sentence Transformer embeddings, and Google's Gemini LLM to generate accurate, context-aware answers grounded in a networking knowledge base.
 
-## 🚀 Features
+The application also supports **chatting with custom PDF documents**, allowing users to upload technical manuals, networking guides, or study material and interact with them using natural language.
 
-* RAG-based question answering system
-* Semantic search using FAISS vector database
-* Gemini-powered response generation
-* Source attribution for transparency
-* Interactive Streamlit web interface
-* Cisco networking troubleshooting knowledge base
-* Fast local retrieval with vector embeddings
+## 🚀 Live Demo
+
+🔗 https://genai-network-assistant-4gjwnob9aeus6xabjedofu.streamlit.app/
 
 ---
 
-## 🏗️ Workflow Overview
+## ✨ Features
 
-```text
-User Query
-     │
-     ▼
-Streamlit UI
-     │
-     ▼
-FAISS Retriever
-     │
-     ▼
-Relevant Cisco Documents
-     │
-     ▼
-Gemini LLM
-     │
-     ▼
-Grounded Response + Sources
-```
+### Knowledge Base Mode
+
+* Cisco networking troubleshooting assistant
+* RAG-based question answering
+* FAISS semantic search
+* Gemini-powered responses
+* Source attribution
+* Retrieved context visualization
+* Chat-style interface
+
+### PDF Chat Mode
+
+* Upload custom PDF documents
+* Automatic text extraction and chunking
+* Dynamic vector database creation
+* Semantic search over uploaded documents
+* AI-powered question answering from PDF content
 
 ---
 
@@ -41,30 +36,50 @@ Grounded Response + Sources
 
 ![System Architecture](assets/architecture.png)
 
-### Workflow
+### Knowledge Base Workflow
 
-1. Networking documents are loaded and split into chunks.
-2. Sentence Transformer embeddings are generated for each chunk.
-3. Embeddings are stored in a FAISS vector database.
-4. User submits a networking query through Streamlit.
-5. Query is converted into an embedding and searched against FAISS.
-6. Top relevant chunks are retrieved.
-7. Retrieved context is sent to Gemini 2.5 Flash.
-8. Gemini generates a grounded response with source attribution.
+User Query
+↓
+Streamlit Chat UI
+↓
+FAISS Retriever
+↓
+Relevant Cisco Documents
+↓
+Gemini 2.5 Flash
+↓
+Grounded Response + Sources
+
+### PDF Chat Workflow
+
+Upload PDF
+↓
+Text Extraction (PyPDF)
+↓
+Chunking
+↓
+Sentence Transformer Embeddings
+↓
+FAISS Vector Store
+↓
+Gemini 2.5 Flash
+↓
+Answer from Uploaded PDF
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Category        | Technology                               |
-| --------------- | ---------------------------------------- |
-| Language        | Python                                   |
-| LLM             | Gemini 2.5 Flash                         |
-| Framework       | LangChain                                |
-| Vector Database | FAISS                                    |
-| Embeddings      | Sentence Transformers (all-MiniLM-L6-v2) |
-| Frontend        | Streamlit                                |
-| Environment     | Python Virtual Environment               |
+| Category        | Technology                |
+| --------------- | ------------------------- |
+| Language        | Python                    |
+| LLM             | Gemini 2.5 Flash          |
+| Framework       | LangChain                 |
+| Vector Database | FAISS                     |
+| Embeddings      | all-MiniLM-L6-v2          |
+| Frontend        | Streamlit                 |
+| PDF Processing  | PyPDF                     |
+| Deployment      | Streamlit Community Cloud |
 
 ---
 
@@ -76,7 +91,11 @@ genai-network-assistant/
 ├── app.py
 ├── ingest.py
 ├── rag_pipeline.py
+├── pdf_ingest.py
+├── pdf_chat.py
 ├── test_rag.py
+├── test_pdf.py
+├── test_pdf_chat.py
 ├── requirements.txt
 ├── .gitignore
 │
@@ -89,7 +108,8 @@ genai-network-assistant/
 ├── assets/
 │   ├── home.png
 │   ├── ospf-query.png
-│   └── etherchannel-query.png
+│   ├── etherchannel-query.png
+│   └── architecture.png
 │
 └── faiss_index/
 ```
@@ -127,7 +147,7 @@ cd genai-network-assistant
 python -m venv venv
 ```
 
-Activate:
+### Activate Environment
 
 ```bash
 venv\Scripts\activate
@@ -163,36 +183,49 @@ streamlit run app.py
 
 ## 🔍 Example Questions
 
+### Knowledge Base Mode
+
 * Why is OSPF not forming adjacency?
 * How do I troubleshoot inter-VLAN routing?
 * BGP neighbor stuck in ACTIVE state.
 * EtherChannel not forming between switches.
 * Hosts in the same VLAN cannot communicate.
 
+### PDF Chat Mode
+
+* Summarize this document.
+* What are the key networking concepts discussed?
+* Explain OSPF from this PDF.
+* What troubleshooting steps are recommended?
+* Give a summary of Chapter 2.
+
 ---
 
 ## 🎯 Key Learning Outcomes
 
 * Retrieval-Augmented Generation (RAG)
-* Vector Databases and Semantic Search
+* Vector Databases (FAISS)
+* Semantic Search
 * Embedding Models
-* Large Language Models (LLMs)
 * Prompt Engineering
 * LangChain Pipelines
-* Streamlit Deployment
-* Knowledge Base Construction
+* PDF Processing and Retrieval
+* Streamlit Application Development
+* LLM Integration with Gemini
+* Cloud Deployment
 
 ---
 
 ## 🚧 Future Improvements
 
-* Support PDF document ingestion
-* Chat history and conversation memory
-* Hybrid search (keyword + semantic)
+* Conversation memory
+* Hybrid retrieval (keyword + semantic search)
 * Larger networking knowledge base
 * Multi-vendor support (Cisco, Juniper, MikroTik)
-* Cloud deployment on Streamlit Community Cloud
-* User feedback and answer rating system
+* User authentication
+* Chat export functionality
+* Feedback and answer rating system
+* Docker deployment
 
 ---
 
@@ -204,6 +237,8 @@ B.E. Electronics & Telecommunication Engineering
 MIT Academy of Engineering, Pune
 
 GitHub: https://github.com/SatishSwami
+
+Live Demo: https://genai-network-assistant-4gjwnob9aeus6xabjedofu.streamlit.app/
 
 ---
 
